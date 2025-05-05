@@ -20,7 +20,7 @@ public class RSAManager {
         return genSignature.sign();
     }
 
-    public static boolean verify(byte[] data, byte[] signature, PublicKey publicKey) throws NoSuchAlgorithmException,
+    public static boolean rsaVerify(byte[] data, byte[] signature, PublicKey publicKey) throws NoSuchAlgorithmException,
             InvalidAlgorithmParameterException, InvalidKeyException, SignatureException {
         Signature verSignature = Signature.getInstance("RSASSA-PSS");
         verSignature.setParameter(new PSSParameterSpec("SHA-512", "MGF1", MGF1ParameterSpec.SHA512, 32, 1));
