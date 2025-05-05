@@ -56,7 +56,7 @@ public class ServerApp {
         System.out.println("Server shutdown.");
         Thread.sleep(1000);
         PublicKey publicKey = FileHandler.readPublicKey(PUBLIC_KEY_FILE);
-        System.out.println(RSAManager.verify(Files.readAllBytes(MESSAGE_FILEPATH), FileHandler.loadSignature(SIGNATURE_FILE), publicKey));
+        System.out.println(RSAManager.rsaVerify(Files.readAllBytes(MESSAGE_FILEPATH), FileHandler.loadSignature(SIGNATURE_FILE), publicKey));
     }
     public static void stopServer() {
         serverRunning = false;
