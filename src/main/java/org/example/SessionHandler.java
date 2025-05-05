@@ -3,7 +3,7 @@ package org.example;
 import javax.net.ssl.SSLSocket;
 import java.io.*;
 
-public class SessionHandler {
+public class SessionHandler extends Thread {
     private final SSLSocket socket;
 
     public SessionHandler(SSLSocket socket) {
