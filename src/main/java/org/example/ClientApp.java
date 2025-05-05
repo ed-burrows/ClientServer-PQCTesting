@@ -19,10 +19,10 @@ import java.security.Security;
 public class ClientApp {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int PORT = 4444;
-    private static final String MESSAGE_FILE = "files/Hello.txt";
-    private static final String SIGNATURE_FILE = "files/signature.sig";
-    private static final String PUBLIC_KEY_FILE = "files/public_key.pem";
-    private static final String PRIVATE_KEY_FILE = "files/private_key.pem";
+    private static final String MESSAGE_FILE = "filestosend/Hello.txt";
+    private static final String SIGNATURE_FILE = "filestosend/signature.sig";
+    private static final String PUBLIC_KEY_FILE = "filestosend/public_key.pem";
+    private static final String PRIVATE_KEY_FILE = "filestosend/private_key.pem";
     private static final Path MESSAGE_FILE_PATH = Path.of(MESSAGE_FILE);
     private static final String[] FILES_TO_SEND = {MESSAGE_FILE, SIGNATURE_FILE, PUBLIC_KEY_FILE};
 
