@@ -19,7 +19,7 @@ import java.security.spec.RSAPublicKeySpec;
 
 public class FileHandler {
 
-    public static void savePublicKey(Key key, String filepath) throws IOException {
+    public static void saveKeyFile(Key key, String filepath) throws IOException {
         try (JcaPEMWriter pemWriter = new JcaPEMWriter(new FileWriter(filepath))){
             pemWriter.writeObject(key);
         }
