@@ -37,7 +37,7 @@ public class SessionHandler extends Thread {
             if (terminationMessage.equals("END_TRANSFER")) {
                 System.out.println("Shutdown signal received. Server is shutting down...");
                 socket.close();
-                ServerApp.stopServer();
+                ConnectionManager.stopServer();
             }
         } catch (IOException e) {
             e.printStackTrace();

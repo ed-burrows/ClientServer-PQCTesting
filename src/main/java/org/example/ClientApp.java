@@ -27,26 +27,16 @@ public class ClientApp {
     private static final String[] FILES_TO_SEND = {MESSAGE_FILE, SIGNATURE_FILE, PUBLIC_KEY_FILE};
 
     public static void main(String[] args) throws Exception {
-//        Security.addProvider(new BouncyCastleProvider());
-//
-//        KeyPair keyPair = RSAManager.generateRSAKeyPair();
-//
-//        FileHandler.saveKeyFile(keyPair.getPrivate(), PRIVATE_KEY_FILE);
-//        FileHandler.saveKeyFile(keyPair.getPublic(), PUBLIC_KEY_FILE);
-//
-//        byte[] signature = RSAManager.rsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), keyPair.getPrivate());
-//        FileHandler.saveSignature(signature, SIGNATURE_FILE);
         CryptoManager cryptoManager = new CryptoManager();
         if (args[0].equalsIgnoreCase("rsa")) {
             cryptoManager.rsaClientOperation();
         } else if (args[0].equalsIgnoreCase("dilithium2")) {
-
+            cryptoManager.dilithium2ClientOperation();
         } else if (args[0].equalsIgnoreCase("dilithium3")) {
-
+            cryptoManager.dilithium3ClientOperation();
         } else if (args[0].equalsIgnoreCase("dilithium5")) {
-
+            cryptoManager.dilithium5ClientOperation();
         }
-        Thread.sleep(1000);
         System.out.println(RSAManager.rsaVerify(Files.readAllBytes(MESSAGE_FILE_PATH), FileHandler.loadSignature(SIGNATURE_FILE), FileHandler.readPublicKey(PUBLIC_KEY_FILE)));
         Thread.sleep(1000);
         try {
@@ -94,7 +84,7 @@ public class ClientApp {
                 System.out.println("All files sent successfully. Server shutdown signal sent.");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());;
         }
     }
 }
