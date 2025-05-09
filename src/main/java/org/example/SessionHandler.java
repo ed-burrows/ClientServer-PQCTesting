@@ -40,7 +40,7 @@ public class SessionHandler extends Thread {
                 ConnectionManager.stopServer();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }
