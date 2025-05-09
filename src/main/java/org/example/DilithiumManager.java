@@ -5,10 +5,24 @@ import org.bouncycastle.pqc.jcajce.spec.DilithiumParameterSpec;
 import java.security.*;
 
 public class DilithiumManager {
-    public static KeyPair generateDilithiumKeyPair() throws InvalidAlgorithmParameterException,
+    public static KeyPair generateDilithium2KeyPair() throws InvalidAlgorithmParameterException,
             NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Dilithium", "BCPQC");
         keyPairGenerator.initialize(DilithiumParameterSpec.dilithium2);
+        return keyPairGenerator.generateKeyPair();
+    }
+
+    public static KeyPair generateDilithium3KeyPair() throws InvalidAlgorithmParameterException,
+            NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Dilithium", "BCPQC");
+        keyPairGenerator.initialize(DilithiumParameterSpec.dilithium3);
+        return keyPairGenerator.generateKeyPair();
+    }
+
+    public static KeyPair generateDilithium5KeyPair() throws InvalidAlgorithmParameterException,
+            NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Dilithium", "BCPQC");
+        keyPairGenerator.initialize(DilithiumParameterSpec.dilithium5);
         return keyPairGenerator.generateKeyPair();
     }
 
