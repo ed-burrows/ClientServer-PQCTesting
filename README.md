@@ -23,10 +23,10 @@ The program provides support for the following digital signature algorithms, wit
   * ML-DSA-87  
 
 The algorithm you wish to test must be parsed as a system argument when executing the programs from the command line. For the above supported algorithms, the following examples are accepted by the program (not case-sensitive):
-* rsa
-* dilithium2
-* dilithium3
-* dilithium5  
+* `rsa`
+* `dilithium2`
+* `dilithium3`
+* `dilithium5`  
 ## Configuration of client-server certificates
 In the case of this project, client trust store and server key stores must be configured and stored in the root directory of the project. Ensure you are in the root directory (after cloning the project) and execute the following commands:  
 ````
@@ -40,8 +40,9 @@ keytool -export -alias server -keystore server_keystore.p12 -storepass password 
 keytool -import -alias server -file server_cert.pem -keystore client_truststore.p12 -storepass password -storetype PKCS12
 
 ````  
-(N.B. in the above examples, `password` resides as a placeholder that can be replaced with whatever you require. It is recommended to leave the above commands as they are assuming you are using this for testing purposes and ***not*** implementing this code in a production environment).
-* If you would like to change the `-storepass` password to something unique, you must also amend the code in the `ConnectionManager` class - specifically the `startClientConnection` and `startServerConnection` methods - to ensure the password used for certificate generation is the same as what is in the code.
+1. If you are testing this project between two different computers, simply execute the above commands and share the generated files between your computers.
+2. In the above examples, `password` resides as a placeholder that can be replaced with whatever you require. It is recommended to leave the above commands as they are assuming you are using this for testing purposes and ***not*** implementing this code in a production environment.
+   * If you would like to change the `-storepass` password to something unique, you must also amend the code in the `ConnectionManager` class - specifically the `startClientConnection` and `startServerConnection` methods - to ensure the password used for certificate generation is the same as what is in the code.
 ## Walkthrough
 * First clone the repository:  
 ````
@@ -57,13 +58,14 @@ mvn compile
 ````
 The programs can now be run from the command line using the following commands (N.B. the ServerApp **must** be executed prior to running the ClientApp. If this execution order isn't adhered to, the client will fail to connect and program execution will end immediately).
 * ServerApp
+  - When running `ServerApp`, ensure the below command is changed such that `algorithmName` is replaced with either `rsa` or `dilithium`, depending on your requirements (please note, in the case of `ServerApp`, `dilithium` provides coverage for all parameter sets of ML-DSA).
 
 ````
-mvn exec:java -Dexec.mainClass="org.example.ServerApp"
+mvn exec:java -Dexec.mainClass="org.example.ServerApp" -Dexec.args="algorithmName"
 ````
 
 * ClientApp
-  - When running ClientApp, ensure the below command is changed such that `algorithmName` represents the name of your chosen algorithm (selected from the supported algorithms above), and `serverIPAddress` is the IPv4 address of the computer ServerApp is hosted on.  
+  - When running ClientApp, ensure the below command is changed such that `algorithmName` represents the name of your chosen algorithm (supported algorithms include `rsa`, `dilithium2`, `dilithium3` and `dilithium5`), and `serverIPAddress` is the IPv4 address of the computer `ServerApp` is hosted on. If you're testing it on a single computer, simply provide your loopback address, such as `localhost` or `127.0.0.1`  
 ````
 mvn exec:java -Dexec.mainClass="org.example.ClientApp" -Dexec.args="algorithmName serverIPAddress"
 ````
