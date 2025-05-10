@@ -30,14 +30,26 @@ The algorithm you wish to test must be parsed as a system argument when executin
 
 ## Walkthrough
 * First clone the repository:  
-```` git clone https://github.com/ed-burrows/ClientServer-PQCTesting ````
+````
+git clone https://github.com/ed-burrows/ClientServer-PQCTesting
+````
 * Next, navigate to the root of the new local repository  
-* ```` cd C:\User\Downloads\ClientServer-PQCTesting ````
+````
+cd C:\User\Downloads\ClientServer-PQCTesting
+````
 * Run Maven compile  
-```` mvn compile ````
-* The programs can now be run from the command line using the following commands (N.B. the ServerApp **must** be executed prior to running the ClientApp. If this execution order isn't adhered to, the client will fail to connect and program execution will end immediately)
-    - ServerApp  
-```` mvn exec:java -Dexec.mainClass="org.example.ServerApp" ````
-  - ClientApp  
+````
+mvn compile
+````  
+The programs can now be run from the command line using the following commands (N.B. the ServerApp **must** be executed prior to running the ClientApp. If this execution order isn't adhered to, the client will fail to connect and program execution will end immediately)
+* ServerApp
+
+````
+mvn exec:java -Dexec.mainClass="org.example.ServerApp"
+````
+
+* ClientApp
   - When running ClientApp, ensure the below command is changed such that "algorithmName" represents the name of your chosen algorithm, and "serverIPAddress" is the IPv4 address of the computer ServerApp is hosted on  
-```` mvn exec:java -Dexec.mainClass="org.example.ClientApp" -Dexec.args="algorithmName serverIPAddress" ````
+````
+mvn exec:java -Dexec.mainClass="org.example.ClientApp" -Dexec.args="algorithmName serverIPAddress"
+````
