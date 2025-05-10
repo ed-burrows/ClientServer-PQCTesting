@@ -8,3 +8,36 @@ The project consists of a simple client-server application, implemented in Java,
 The BenchmarkLogger class is used throughout the life of the application to capture various metrics, including key sizes, digital signature file sizes, as well as the time taken to execute various parts of the applications core functionality.
 ## Rationale
 The issue of PQC adoption has interested me throughout my studies at university. Whilst I was conducting a review of recent literature, it struck me how little literature existed that explicitly covered how effective, and more importantly how efficient, PQC algorithms were in a real-world scenario, but also using 'modern' technology (i.e. on a traditional computer).
+# Building the project
+Building and compilation of this project has been tested on Windows 11 as this was the native OS for project development. Linux/macOS instructions to follow at a later date.
+## Pre-requisites
+To compile and build the program you need a Java Development Kit (JDK) and Apache Maven. The following were used for development:
+* Java (JDK 23.0.2)
+* Apache Maven (3.9.9)
+## Running the program
+The program provides support for the following digital signature algorithms, with varying parameter specs:
+* RSA
+* ML-DSA (Dilithium):
+  * ML-DSA-44,
+  * ML-DSA-65,
+  * ML-DSA-87  
+
+The algorithm you wish to test must be parsed as a system argument when executing the programs from the command line. For the above supported algorithms, the following examples are accepted by the program (not case-sensitive):
+* rsa
+* dilithium2
+* dilithium3
+* dilithium5  
+
+## Walkthrough
+* First clone the repository:  
+```` git clone https://github.com/ed-burrows/ClientServer-PQCTesting ````
+* Next, navigate to the root of the new local repository  
+* ```` cd C:\User\Downloads\ClientServer-PQCTesting ````
+* Run Maven compile  
+```` mvn compile ````
+* The programs can now be run from the command line using the following commands (N.B. the ServerApp **must** be executed prior to running the ClientApp. If this execution order isn't adhered to, the client will fail to connect and program execution will end immediately)
+    - ServerApp  
+```` mvn exec:java -Dexec.mainClass="org.example.ServerApp" ````
+  - ClientApp  
+  - When running ClientApp, ensure the below command is changed such that "algorithmName" represents the name of your chosen algorithm, and "serverIPAddress" is the IPv4 address of the computer ServerApp is hosted on  
+```` mvn exec:java -Dexec.mainClass="org.example.ClientApp" -Dexec.args="algorithmName serverIPAddress" ````
