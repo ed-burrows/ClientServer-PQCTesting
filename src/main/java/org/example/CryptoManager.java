@@ -63,4 +63,10 @@ public class CryptoManager {
         PublicKey publicKey = FileHandler.readPublicKey(RECEIVED_KEY_FILE);
         return RSAManager.rsaVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
     }
+
+    public boolean dilithiumVerifyOperation() throws Exception {
+        Security.addProvider(new BouncyCastleProvider());
+        PublicKey publicKey = FileHandler.readPublicKey(RECEIVED_KEY_FILE);
+        return DilithiumManager.dilithiumVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
+    }
 }
