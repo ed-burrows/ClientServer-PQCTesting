@@ -13,7 +13,7 @@ public class ConnectionManager {
     private static final String PUBLIC_KEY_FILE = "filestosend/public_key.pem";
     private static final String[] FILES_TO_SEND = {MESSAGE_FILE, SIGNATURE_FILE, PUBLIC_KEY_FILE};
 
-    public void startServerConnection() throws InterruptedException {
+    public void startServerConnection(CryptoManager cryptoManager, String algorithm) throws Exception {
         try {
             KeyStore keyStore = KeyStore.getInstance("PKCS12");
             try (FileInputStream keyStoreFile = new FileInputStream("server_keystore.p12")) {
@@ -44,6 +44,11 @@ public class ConnectionManager {
         }
         System.out.println("Server shutdown.");
         Thread.sleep(1000);
+        if (algorithm.equalsIgnoreCase("rsa")) {
+            System.out.println(cryptoManager.rsaVerifyOperation());
+        } else if (algorithm.equalsIgnoreCase("dilithium")) {
+            System.out.println(cryptoManager.dilithiumVerifyOperation());
+        }
     }
 
     public void startClientConnection(CryptoManager cryptoManager, String algorithm, String serverAddress) throws Exception {
