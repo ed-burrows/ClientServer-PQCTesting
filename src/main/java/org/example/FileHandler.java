@@ -12,20 +12,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.PublicKey;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 public class FileHandler {
 
-    public static void saveKeyFile(Key key, String filepath) throws IOException {
+    public static void saveRSAKey(Key key, String filepath) throws IOException {
         try (JcaPEMWriter pemWriter = new JcaPEMWriter(new FileWriter(filepath))){
             pemWriter.writeObject(key);
         }
     }
 
-    public static PublicKey readPublicKey(String pemFilePath) throws Exception {
+    public static PublicKey readRSAKey(String pemFilePath) throws Exception {
         try (FileReader keyReader = new FileReader(pemFilePath);
              PEMParser pemParser = new PEMParser(keyReader)) {
 
@@ -41,6 +41,17 @@ public class FileHandler {
                 throw new IllegalArgumentException("Unsupported PEM format");
             }
         }
+    }
+
+    public static void saveDilithiumKey(byte[] key, String filepath) throws IOException {
+        Files.write(Paths.get(filepath), key);
+    }
+
+    public static PublicKey readDilithiumKey(String filepath) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
+        byte[] publicKeyBytes = Files.readAllBytes(Paths.get(filepath));
+        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("Dilithium", "BCPQC");
+        return keyFactory.generatePublic(publicKeySpec);
     }
 
     public static void saveSignature(byte[] signature, String filepath) throws IOException {
