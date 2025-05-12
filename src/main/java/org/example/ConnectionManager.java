@@ -49,6 +49,8 @@ public class ConnectionManager {
         } else if (algorithm.equalsIgnoreCase("dilithium")) {
             System.out.println(cryptoManager.dilithiumVerifyOperation());
         }
+        BenchmarkLogger logger = BenchmarkLogger.getInstance();
+        logger.writeToCSV("serverresults.csv");
     }
 
     public void startClientConnection(CryptoManager cryptoManager, String algorithm, String serverAddress) throws Exception {
@@ -74,12 +76,14 @@ public class ConnectionManager {
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
             SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            BenchmarkLogger logger = BenchmarkLogger.getInstance();
+            long startTransfer;
             try (SSLSocket socket = (SSLSocket) sslSocketFactory.createSocket(serverAddress,PORT);
                  DataOutputStream output = new DataOutputStream(socket.getOutputStream());
                  DataInputStream input = new DataInputStream(socket.getInputStream())) {
 
                 output.writeInt(FILES_TO_SEND.length);
-
+                startTransfer = logger.startTimer();
                 for (String filename : FILES_TO_SEND) {
                     File file = new File(filename);
                     if (!file.exists()) {
@@ -102,6 +106,10 @@ public class ConnectionManager {
                 output.writeUTF("END_TRANSFER");
                 System.out.println("All files send successfully. Server shutdown signal sent.");
             }
+            long transferTime = logger.stopTimer(startTransfer);
+            logger.log("TransferTime(ms)", String.valueOf(transferTime));
+            logger.printResults();
+            logger.writeToCSV("clientresults.csv");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
