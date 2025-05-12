@@ -26,7 +26,6 @@ public class CryptoManager {
     public void rsaClientOperation() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        logger.log("AlgorithmName", "RSA");
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = RSAManager.generateRSAKeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
@@ -46,7 +45,6 @@ public class CryptoManager {
     public void dilithium2ClientOperation() throws Exception {
         Security.addProvider(new BouncyCastlePQCProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        logger.log("AlgorithmName", "Dilithium2");
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = DilithiumManager.generateDilithium2KeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
@@ -68,7 +66,6 @@ public class CryptoManager {
     public void dilithium3ClientOperation() throws Exception {
         Security.addProvider(new BouncyCastlePQCProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        logger.log("AlgorithmName", "Dilithium3");
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = DilithiumManager.generateDilithium3KeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
@@ -90,7 +87,6 @@ public class CryptoManager {
     public void dilithium5ClientOperation() throws Exception {
         Security.addProvider(new BouncyCastlePQCProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        logger.log("AlgorithmName", "Dilithium5");
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = DilithiumManager.generateDilithium5KeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
@@ -112,7 +108,6 @@ public class CryptoManager {
     public boolean rsaVerifyOperation() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        logger.log("AlgorithmName", "RSA");
         PublicKey publicKey = FileHandler.readRSAKey(RECEIVED_KEY_FILE);
         long startSignatureVerification = logger.startTimer();
         boolean verifiedSignature = RSAManager.rsaVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
@@ -128,7 +123,6 @@ public class CryptoManager {
     public boolean dilithiumVerifyOperation() throws Exception {
         Security.addProvider(new BouncyCastlePQCProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        logger.log("AlgorithmName", "Dilithium");
         PublicKey publicKey = FileHandler.readDilithiumKey(RECEIVED_KEY_FILE);
         long startSignatureVerification = logger.startTimer();
         boolean verifiedSignature = DilithiumManager.dilithiumVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
