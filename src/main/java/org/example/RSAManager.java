@@ -5,10 +5,10 @@ import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PSSParameterSpec;
 
 public class RSAManager {
-    public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-        generator.initialize(4096);
-        return generator.generateKeyPair();
+    public static KeyPair generateRSAKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
+        keyPairGenerator.initialize(4096, new SecureRandom());
+        return keyPairGenerator.generateKeyPair();
     }
 
     public static byte[] rsaSign(byte[] data, PrivateKey privateKey) throws NoSuchAlgorithmException,
