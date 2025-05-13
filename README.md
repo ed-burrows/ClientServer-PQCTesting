@@ -58,7 +58,7 @@ mvn compile
 ````
 The programs can now be run from the command line using the following commands (N.B. the ServerApp **must** be executed prior to running the ClientApp. If this execution order isn't adhered to, the client will fail to connect and program execution will end immediately).
 * ServerApp
-  - When running `ServerApp`, ensure the below command is changed such that `algorithmName` is replaced with either `rsa` or `dilithium`, depending on your requirements (please note, in the case of `ServerApp`, `dilithium` provides coverage for all parameter sets of ML-DSA).
+  - When running `ServerApp`, ensure the below command is changed such that `algorithmName` is replaced with either `rsa` or `dilithium2`, `dilithium3`, or `dilithium5`, depending on your requirements.
 
 ````
 mvn exec:java -Dexec.mainClass="org.example.ServerApp" -Dexec.args="algorithmName"
