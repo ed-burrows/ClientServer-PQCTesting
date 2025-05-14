@@ -23,11 +23,30 @@ public class CryptoManager {
 
     public CryptoManager() {}
 
-    public void rsaClientOperation() throws Exception {
+    public void rsa3072ClientOperation() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
         long startKeyPair = logger.startTimer();
-        KeyPair keyPair = RSAManager.generateRSAKeyPair();
+        KeyPair keyPair = RSAManager.generateRSA3072KeyPair();
+        long timedKeyPair = logger.stopTimer(startKeyPair);
+        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
+        logger.logSize("PrivKeySize(bytes)", keyPair.getPrivate().getEncoded());
+        logger.logSize("PublicKeySize(bytes)", keyPair.getPublic().getEncoded());
+        FileHandler.saveRSAKey(keyPair.getPrivate(), PRIVATE_KEY_FILE);
+        FileHandler.saveRSAKey(keyPair.getPublic(), PUBLIC_KEY_FILE);
+        long startSignatureGeneration = logger.startTimer();
+        byte[] signature = RSAManager.rsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), keyPair.getPrivate());
+        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
+        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
+        logger.logSize("SignatureSize(bytes)", signature);
+        FileHandler.saveSignature(signature, SIGNATURE_FILE);
+    }
+
+    public void rsa4096ClientOperation() throws Exception {
+        Security.addProvider(new BouncyCastleProvider());
+        BenchmarkLogger logger = BenchmarkLogger.getInstance();
+        long startKeyPair = logger.startTimer();
+        KeyPair keyPair = RSAManager.generateRSA4096KeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", keyPair.getPrivate().getEncoded());

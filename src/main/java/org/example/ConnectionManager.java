@@ -29,7 +29,7 @@ public class ConnectionManager {
             SSLServerSocketFactory sslServerSocketFactory = sslContext.getServerSocketFactory();
             serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(PORT);
             serverSocket.setNeedClientAuth(false);
-            System.out.println("Secure FTP server started on port " + PORT);
+            System.out.println("Secure server started on port " + PORT);
             serverRunning = true;
             while (serverRunning) {
                 try {
@@ -45,11 +45,10 @@ public class ConnectionManager {
         System.out.println("Server shutdown.");
         Thread.sleep(1000);
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        if (algorithm.equalsIgnoreCase("rsa")) {
+        if (algorithm.equalsIgnoreCase("rsa3072") || algorithm.equalsIgnoreCase("rsa4096")) {
             logger.log("AlgorithmName", algorithm);
             System.out.println(cryptoManager.rsaVerifyOperation());
-        } else if (algorithm.equalsIgnoreCase("dilithium2") || algorithm.equalsIgnoreCase("dilithium3")
-                || algorithm.equalsIgnoreCase("dilithium5")) {
+        } else if (algorithm.equalsIgnoreCase("dilithium2") || algorithm.equalsIgnoreCase("dilithium3") || algorithm.equalsIgnoreCase("dilithium5")) {
             logger.log("AlgorithmName", algorithm);
             System.out.println(cryptoManager.dilithiumVerifyOperation());
         }
@@ -58,9 +57,12 @@ public class ConnectionManager {
 
     public void startClientConnection(CryptoManager cryptoManager, String algorithm, String serverAddress) throws Exception {
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        if (algorithm.equalsIgnoreCase("rsa")) {
+        if (algorithm.equalsIgnoreCase("rsa3072")) {
             logger.log("AlgorithmName", algorithm);
-            cryptoManager.rsaClientOperation();
+            cryptoManager.rsa3072ClientOperation();
+        } else if (algorithm.equalsIgnoreCase("rsa4096")) {
+            logger.log("AlgorithmName", algorithm);
+            cryptoManager.rsa4096ClientOperation();
         } else if (algorithm.equalsIgnoreCase("dilithium2")) {
             logger.log("AlgorithmName", algorithm);
             cryptoManager.dilithium2ClientOperation();
