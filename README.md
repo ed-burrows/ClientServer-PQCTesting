@@ -10,7 +10,7 @@ The `BenchmarkLogger` class is used throughout the life of the application to ca
 The issue of PQC adoption has interested me throughout my studies at university. Whilst I was conducting a review of recent literature, it struck me how little literature existed that explicitly covered how effective, and more importantly how efficient, PQC algorithms were in a real-world scenario, but also using 'modern' technology (i.e. on a traditional computer).
 # Building the project
 Building and compilation of this project has been tested on Windows 11 as this was the native OS for project development. Linux/macOS instructions to follow at a later date.
-## Pre-requisites
+## Prerequisites
 To compile and build the program you need a Java Development Kit (JDK) and Apache Maven. The following were used for development:
 * Java (JDK 23.0.2)
 * Apache Maven (3.9.9)
