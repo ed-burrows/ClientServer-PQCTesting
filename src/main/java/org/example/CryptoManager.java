@@ -29,13 +29,14 @@ public class CryptoManager {
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = RSAManager.generateRSA3072KeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
-        logger.logSize("PrivKeySize(bytes)", keyPair.getPrivate().getEncoded());
-        logger.logSize("PublicKeySize(bytes)", keyPair.getPublic().getEncoded());
-        FileHandler.saveRSAKey(keyPair.getPrivate(), PRIVATE_KEY_FILE);
-        FileHandler.saveRSAKey(keyPair.getPublic(), PUBLIC_KEY_FILE);
+        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
+        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
+        FileHandler.saveRSAKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
-        byte[] signature = RSAManager.rsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), keyPair.getPrivate());
+        byte[] signature = RSAManager.rsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
         logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
         logger.logSize("SignatureSize(bytes)", signature);
@@ -48,13 +49,14 @@ public class CryptoManager {
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = RSAManager.generateRSA4096KeyPair();
         long timedKeyPair = logger.stopTimer(startKeyPair);
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
-        logger.logSize("PrivKeySize(bytes)", keyPair.getPrivate().getEncoded());
-        logger.logSize("PublicKeySize(bytes)", keyPair.getPublic().getEncoded());
-        FileHandler.saveRSAKey(keyPair.getPrivate(), PRIVATE_KEY_FILE);
-        FileHandler.saveRSAKey(keyPair.getPublic(), PUBLIC_KEY_FILE);
+        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
+        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
+        FileHandler.saveRSAKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
-        byte[] signature = RSAManager.rsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), keyPair.getPrivate());
+        byte[] signature = RSAManager.rsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
         logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
         logger.logSize("SignatureSize(bytes)", signature);
@@ -72,8 +74,7 @@ public class CryptoManager {
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveDilithiumKey(privateKey.getEncoded(), PRIVATE_KEY_FILE);
-        FileHandler.saveDilithiumKey(publicKey.getEncoded(), PUBLIC_KEY_FILE);
+        FileHandler.saveDilithiumKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
         byte[] signature = DilithiumManager.dilithiumSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
@@ -93,8 +94,7 @@ public class CryptoManager {
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveDilithiumKey(privateKey.getEncoded(), PRIVATE_KEY_FILE);
-        FileHandler.saveDilithiumKey(publicKey.getEncoded(), PUBLIC_KEY_FILE);
+        FileHandler.saveDilithiumKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
         byte[] signature = DilithiumManager.dilithiumSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
@@ -114,8 +114,7 @@ public class CryptoManager {
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveDilithiumKey(privateKey.getEncoded(), PRIVATE_KEY_FILE);
-        FileHandler.saveDilithiumKey(publicKey.getEncoded(), PUBLIC_KEY_FILE);
+        FileHandler.saveDilithiumKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
         byte[] signature = DilithiumManager.dilithiumSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
@@ -127,7 +126,7 @@ public class CryptoManager {
     public boolean rsaVerifyOperation() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        PublicKey publicKey = FileHandler.readRSAKey(RECEIVED_KEY_FILE);
+        PublicKey publicKey = FileHandler.loadRSAPublicKey(RECEIVED_KEY_FILE);
         long startSignatureVerification = logger.startTimer();
         boolean verifiedSignature = RSAManager.rsaVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
         long signatureVerification = logger.stopTimer(startSignatureVerification);
@@ -142,7 +141,7 @@ public class CryptoManager {
     public boolean dilithiumVerifyOperation() throws Exception {
         Security.addProvider(new BouncyCastlePQCProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        PublicKey publicKey = FileHandler.readDilithiumKey(RECEIVED_KEY_FILE);
+        PublicKey publicKey = FileHandler.loadDilithiumPublicKey(RECEIVED_KEY_FILE);
         long startSignatureVerification = logger.startTimer();
         boolean verifiedSignature = DilithiumManager.dilithiumVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
         long signatureVerification = logger.stopTimer(startSignatureVerification);

@@ -1,10 +1,8 @@
 package org.example;
 
-import org.bouncycastle.asn1.pkcs.RSAPublicKey;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.util.io.pem.PemWriter;
 
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -13,46 +11,45 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 public class FileHandler {
 
-    public static void saveRSAKey(Key key, String filepath) throws IOException {
-        try (JcaPEMWriter pemWriter = new JcaPEMWriter(new FileWriter(filepath))){
-            pemWriter.writeObject(key);
+    public static void saveKeyToFile(String filename, String description, byte[] keybytes) throws IOException {
+        PemObject pemObject = new PemObject(description, keybytes);
+        try (PemWriter pemWriter = new PemWriter(new FileWriter(filename))) {
+            pemWriter.writeObject(pemObject);
         }
     }
 
-    public static PublicKey readRSAKey(String pemFilePath) throws Exception {
-        try (FileReader keyReader = new FileReader(pemFilePath);
-             PEMParser pemParser = new PEMParser(keyReader)) {
+    public static void saveRSAKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey, String pubKeyFilepath) throws IOException {
+        saveKeyToFile(privKeyFilepath, "RSA PRIVATE KEY", privateKey.getEncoded());
+        saveKeyToFile(pubKeyFilepath, "RSA PUBLIC KEY", publicKey.getEncoded());
+    }
 
-            Object object = pemParser.readObject();
-            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+    public static void saveDilithiumKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey, String pubKeyFilepath) throws IOException {
+        saveKeyToFile(privKeyFilepath, "DILITHIUM PRIVATE KEY", privateKey.getEncoded());
+        saveKeyToFile(pubKeyFilepath, "DILITHIUM PUBLIC KEY", publicKey.getEncoded());
+    }
 
-            if (object instanceof SubjectPublicKeyInfo) {
-                return converter.getPublicKey((SubjectPublicKeyInfo) object);
-            } else if (object instanceof RSAPublicKey rsaPublicKey) {
-                RSAPublicKeySpec keySpec = new RSAPublicKeySpec(rsaPublicKey.getModulus(), rsaPublicKey.getPublicExponent());
-                return KeyFactory.getInstance("RSA").generatePublic(keySpec);
-            } else {
-                throw new IllegalArgumentException("Unsupported PEM format");
-            }
+    public static PublicKey loadRSAPublicKey(String filepath) throws Exception {
+        try (PemReader pemReader = new PemReader(new FileReader(filepath))) {
+            PemObject pemObject = pemReader.readPemObject();
+            byte[] keyBytes = pemObject.getContent();
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            return keyFactory.generatePublic(keySpec);
         }
     }
 
-    public static void saveDilithiumKey(byte[] key, String filepath) throws IOException {
-        Files.write(Paths.get(filepath), key);
-    }
-
-    public static PublicKey readDilithiumKey(String filepath) throws IOException, NoSuchAlgorithmException,
-            NoSuchProviderException, InvalidKeySpecException {
-        byte[] publicKeyBytes = Files.readAllBytes(Paths.get(filepath));
-        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("Dilithium", "BCPQC");
-        return keyFactory.generatePublic(publicKeySpec);
+    public static PublicKey loadDilithiumPublicKey(String filepath) throws Exception {
+        try (PemReader pemReader = new PemReader(new FileReader(filepath))) {
+            PemObject pemObject = pemReader.readPemObject();
+            byte[] keyBytes = pemObject.getContent();
+            KeyFactory keyFactory = KeyFactory.getInstance("Dilithium", "BCPQC");
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            return keyFactory.generatePublic(keySpec);
+        }
     }
 
     public static void saveSignature(byte[] signature, String filepath) throws IOException {
