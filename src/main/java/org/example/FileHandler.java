@@ -15,8 +15,8 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class FileHandler {
 
-    public static void saveKeyToFile(String filename, String description, byte[] keybytes) throws IOException {
-        PemObject pemObject = new PemObject(description, keybytes);
+    public static void saveKeyToFile(String filename, String description, byte[] keyBytes) throws IOException {
+        PemObject pemObject = new PemObject(description, keyBytes);
         try (PemWriter pemWriter = new PemWriter(new FileWriter(filename))) {
             pemWriter.writeObject(pemObject);
         }
@@ -27,7 +27,7 @@ public class FileHandler {
         saveKeyToFile(pubKeyFilepath, "RSA PUBLIC KEY", publicKey.getEncoded());
     }
 
-    public static void saveDilithiumKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey, String pubKeyFilepath) throws IOException {
+    public static void saveDilithiumKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey,String pubKeyFilepath) throws IOException {
         saveKeyToFile(privKeyFilepath, "DILITHIUM PRIVATE KEY", privateKey.getEncoded());
         saveKeyToFile(pubKeyFilepath, "DILITHIUM PUBLIC KEY", publicKey.getEncoded());
     }
