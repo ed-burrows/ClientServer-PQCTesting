@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
@@ -50,6 +51,17 @@ public class FileHandler {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
             return keyFactory.generatePublic(keySpec);
         }
+    }
+
+    public static void saveMLDSAKeys(String filepath, PublicKey publicKey) throws IOException {
+        Files.write(Path.of(filepath), publicKey.getEncoded());
+    }
+
+    public static PublicKey loadMLDSAPublicKey(String filepath) throws Exception {
+        byte[] pubKeyBytes = Files.readAllBytes(Path.of(filepath));
+        KeyFactory factory = KeyFactory.getInstance("ML-DSA");
+        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(pubKeyBytes);
+        return factory.generatePublic(publicKeySpec);
     }
 
     public static void saveSignature(byte[] signature, String filepath) throws IOException {

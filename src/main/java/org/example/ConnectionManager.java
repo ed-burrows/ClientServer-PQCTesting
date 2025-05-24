@@ -51,6 +51,9 @@ public class ConnectionManager {
         } else if (algorithm.equalsIgnoreCase("dilithium2") || algorithm.equalsIgnoreCase("dilithium3") || algorithm.equalsIgnoreCase("dilithium5")) {
             logger.log("AlgorithmName", algorithm);
             System.out.println(cryptoManager.dilithiumVerifyOperation());
+        } else if (algorithm.equalsIgnoreCase("mldsa44") || algorithm.equalsIgnoreCase("mldsa65") || algorithm.equalsIgnoreCase("mldsa87")) {
+            logger.log("AlgorithmName", algorithm);
+            System.out.println(cryptoManager.mldsaVerifyOperation());
         }
         logger.writeToCSV("serverresults.csv");
     }
@@ -72,6 +75,15 @@ public class ConnectionManager {
         } else if (algorithm.equalsIgnoreCase("dilithium5")) {
             logger.log("AlgorithmName", algorithm);
             cryptoManager.dilithium5ClientOperation();
+        } else if (algorithm.equalsIgnoreCase("mldsa44")) {
+            logger.log("AlgorithmName", algorithm);
+            cryptoManager.mldsa44ClientOperation();
+        } else if (algorithm.equalsIgnoreCase("mldsa65")) {
+            logger.log("AlgorithmName", algorithm);
+            cryptoManager.mldsa65ClientOperation();
+        } else if (algorithm.equalsIgnoreCase("mldsa87")) {
+            logger.log("AlgorithmName", algorithm);
+            cryptoManager.mldsa87ClientOperation();
         }
         try {
             KeyStore trustStore = KeyStore.getInstance("PKCS12");

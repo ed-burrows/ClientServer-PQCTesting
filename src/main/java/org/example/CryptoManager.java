@@ -152,4 +152,75 @@ public class CryptoManager {
         logger.log("VerificationResult", String.valueOf(verifiedSignature));
         return verifiedSignature;
     }
+
+    public void mldsa44ClientOperation() throws Exception {
+        BenchmarkLogger logger = BenchmarkLogger.getInstance();
+        long startKeyPair = logger.startTimer();
+        KeyPair keyPair = MLDSAManager.generateMLDSA44KeyPair();
+        long timedKeyPair = logger.stopTimer(startKeyPair);
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
+        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
+        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
+        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
+        FileHandler.saveMLDSAKeys(PUBLIC_KEY_FILE, publicKey);
+        long startSignatureGeneration = logger.startTimer();
+        byte[] signature = MLDSAManager.mldsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
+        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
+        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
+        logger.logSize("SignatureSize(bytes)", signature);
+        FileHandler.saveSignature(signature, SIGNATURE_FILE);
+    }
+
+    public void mldsa65ClientOperation() throws Exception {
+        BenchmarkLogger logger = BenchmarkLogger.getInstance();
+        long startKeyPair = logger.startTimer();
+        KeyPair keyPair = MLDSAManager.generateMLDSA65KeyPair();
+        long timedKeyPair = logger.stopTimer(startKeyPair);
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
+        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
+        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
+        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
+        FileHandler.saveMLDSAKeys(PUBLIC_KEY_FILE, publicKey);
+        long startSignatureGeneration = logger.startTimer();
+        byte[] signature = MLDSAManager.mldsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
+        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
+        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
+        logger.logSize("SignatureSize(bytes)", signature);
+        FileHandler.saveSignature(signature, SIGNATURE_FILE);
+    }
+
+    public void mldsa87ClientOperation() throws Exception {
+        BenchmarkLogger logger = BenchmarkLogger.getInstance();
+        long startKeyPair = logger.startTimer();
+        KeyPair keyPair = MLDSAManager.generateMLDSA87KeyPair();
+        long timedKeyPair = logger.stopTimer(startKeyPair);
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
+        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
+        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
+        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
+        FileHandler.saveMLDSAKeys(PUBLIC_KEY_FILE, publicKey);
+        long startSignatureGeneration = logger.startTimer();
+        byte[] signature = MLDSAManager.mldsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
+        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
+        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
+        logger.logSize("SignatureSize(bytes)", signature);
+        FileHandler.saveSignature(signature, SIGNATURE_FILE);
+    }
+
+    public boolean mldsaVerifyOperation() throws Exception {
+        BenchmarkLogger logger = BenchmarkLogger.getInstance();
+        PublicKey publicKey = FileHandler.loadMLDSAPublicKey(RECEIVED_KEY_FILE);
+        long startSignatureVerification = logger.startTimer();
+        boolean verifiedSignature = MLDSAManager.mldsaVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
+        long signatureVerification = logger.stopTimer(startSignatureVerification);
+        byte[] signature = FileHandler.loadSignature(RECEIVED_SIGNATURE);
+        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
+        logger.logSize("SignatureSize(bytes)", signature);
+        logger.log("SignatureVerify(ms)", String.valueOf(signatureVerification));
+        logger.log("VerificationResult", String.valueOf(verifiedSignature));
+        return verifiedSignature;
+    }
 }

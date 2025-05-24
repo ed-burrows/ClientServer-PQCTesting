@@ -12,21 +12,24 @@ The issue of PQC adoption has interested me throughout my studies at university.
 Building and compilation of this project has been tested on Windows 11 as this was the native OS for project development. Linux/macOS instructions to follow at a later date.
 ## Prerequisites
 To compile and build the program you need a Java Development Kit (JDK) and Apache Maven. The following were used for development:
-* Java (JDK 23.0.2)
+* Java (OpenJDK 24.0.1)
 * Apache Maven (3.9.9)
 ## Running the program
 The program provides support for the following digital signature algorithms, with varying parameter specs:
 * RSA
-* ML-DSA (Dilithium):
+  * RSA-3072,
+  * RSA-4096,
+* ML-DSA:
   * ML-DSA-44,
   * ML-DSA-65,
   * ML-DSA-87  
 
 The algorithm you wish to test must be parsed as a system argument when executing the programs from the command line. For the above supported algorithms, the following examples are accepted by the program (not case-sensitive):
-* `rsa`
-* `dilithium2`
-* `dilithium3`
-* `dilithium5`  
+* `rsa3072`
+* `rsa4096`
+* `mldsa44`
+* `mldsa65`
+* `mldsa87`  
 ## Configuration of client-server certificates
 In the case of this project, client trust store and server key stores must be configured and stored in the root directory of the project. Ensure you are in the root directory (after cloning the project) and execute the following commands:  
 ````
@@ -58,14 +61,14 @@ mvn compile
 ````
 The programs can now be run from the command line using the following commands (N.B. the ServerApp **must** be executed prior to running the ClientApp. If this execution order isn't adhered to, the client will fail to connect and program execution will end immediately).
 * ServerApp
-  - When running `ServerApp`, ensure the below command is changed such that `algorithmName` is replaced with either `rsa3072`, `rsa4096`, `dilithium2`, `dilithium3`, or `dilithium5`, depending on your requirements.
+  - When running `ServerApp`, ensure the below command is changed such that `algorithmName` is replaced with either `rsa3072`, `rsa4096`, `mldsa44`, `mldsa65`, or `mldsa87`, depending on your requirements.
 
 ````
 mvn exec:java -Dexec.mainClass="org.example.ServerApp" -Dexec.args="algorithmName"
 ````
 
 * ClientApp
-  - When running ClientApp, ensure the below command is changed such that `algorithmName` represents the name of your chosen algorithm (supported algorithms include `rsa3072`, `rsa4096`, `dilithium2`, `dilithium3`, and `dilithium5`), and `serverIPAddress` is the IPv4 address of the computer `ServerApp` is hosted on. If you're testing it on a single computer, simply provide your loopback address, such as `localhost` or `127.0.0.1`  
+  - When running ClientApp, ensure the below command is changed such that `algorithmName` represents the name of your chosen algorithm (supported algorithms include `rsa3072`, `rsa4096`, `mldsa44`, `mldsa65`, and `mldsa87`), and `serverIPAddress` is the IPv4 address of the computer `ServerApp` is hosted on. If you're testing it on a single computer, simply provide your loopback address, such as `localhost` or `127.0.0.1`  
 ````
 mvn exec:java -Dexec.mainClass="org.example.ClientApp" -Dexec.args="algorithmName serverIPAddress"
 ````
