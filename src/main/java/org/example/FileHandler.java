@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
@@ -24,44 +23,34 @@ public class FileHandler {
     }
 
     public static void saveRSAKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey, String pubKeyFilepath) throws IOException {
-        saveKeyToFile(privKeyFilepath, "RSA PRIVATE KEY", privateKey.getEncoded());
-        saveKeyToFile(pubKeyFilepath, "RSA PUBLIC KEY", publicKey.getEncoded());
-    }
-
-    public static void saveDilithiumKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey,String pubKeyFilepath) throws IOException {
-        saveKeyToFile(privKeyFilepath, "DILITHIUM PRIVATE KEY", privateKey.getEncoded());
-        saveKeyToFile(pubKeyFilepath, "DILITHIUM PUBLIC KEY", publicKey.getEncoded());
+        saveKeyToFile(privKeyFilepath, "PRIVATE KEY", privateKey.getEncoded());
+        saveKeyToFile(pubKeyFilepath, "PUBLIC KEY", publicKey.getEncoded());
     }
 
     public static PublicKey loadRSAPublicKey(String filepath) throws Exception {
         try (PemReader pemReader = new PemReader(new FileReader(filepath))) {
             PemObject pemObject = pemReader.readPemObject();
             byte[] keyBytes = pemObject.getContent();
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
             return keyFactory.generatePublic(keySpec);
         }
     }
 
-    public static PublicKey loadDilithiumPublicKey(String filepath) throws Exception {
-        try (PemReader pemReader = new PemReader(new FileReader(filepath))) {
-            PemObject pemObject = pemReader.readPemObject();
-            byte[] keyBytes = pemObject.getContent();
-            KeyFactory keyFactory = KeyFactory.getInstance("Dilithium", "BCPQC");
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-            return keyFactory.generatePublic(keySpec);
-        }
-    }
-
-    public static void saveMLDSAKeys(String filepath, PublicKey publicKey) throws IOException {
-        Files.write(Path.of(filepath), publicKey.getEncoded());
+    public static void saveMLDSAKeys(PrivateKey privateKey, String privKeyFilepath, PublicKey publicKey, String pubKeyFilepath)
+            throws IOException {
+        saveKeyToFile(privKeyFilepath, "PRIVATE KEY", privateKey.getEncoded());
+        saveKeyToFile(pubKeyFilepath, "PUBLIC KEY", publicKey.getEncoded());
     }
 
     public static PublicKey loadMLDSAPublicKey(String filepath) throws Exception {
-        byte[] pubKeyBytes = Files.readAllBytes(Path.of(filepath));
-        KeyFactory factory = KeyFactory.getInstance("ML-DSA");
-        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(pubKeyBytes);
-        return factory.generatePublic(publicKeySpec);
+        try (PemReader pemReader = new PemReader(new FileReader(filepath))) {
+            PemObject pemObject = pemReader.readPemObject();
+            byte[] keyBytes = pemObject.getContent();
+            KeyFactory keyFactory = KeyFactory.getInstance("ML-DSA");
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+            return keyFactory.generatePublic(keySpec);
+        }
     }
 
     public static void saveSignature(byte[] signature, String filepath) throws IOException {

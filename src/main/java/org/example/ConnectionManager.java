@@ -48,9 +48,6 @@ public class ConnectionManager {
         if (algorithm.equalsIgnoreCase("rsa3072") || algorithm.equalsIgnoreCase("rsa4096")) {
             logger.log("AlgorithmName", algorithm);
             System.out.println(cryptoManager.rsaVerifyOperation());
-        } else if (algorithm.equalsIgnoreCase("dilithium2") || algorithm.equalsIgnoreCase("dilithium3") || algorithm.equalsIgnoreCase("dilithium5")) {
-            logger.log("AlgorithmName", algorithm);
-            System.out.println(cryptoManager.dilithiumVerifyOperation());
         } else if (algorithm.equalsIgnoreCase("mldsa44") || algorithm.equalsIgnoreCase("mldsa65") || algorithm.equalsIgnoreCase("mldsa87")) {
             logger.log("AlgorithmName", algorithm);
             System.out.println(cryptoManager.mldsaVerifyOperation());
@@ -66,15 +63,6 @@ public class ConnectionManager {
         } else if (algorithm.equalsIgnoreCase("rsa4096")) {
             logger.log("AlgorithmName", algorithm);
             cryptoManager.rsa4096ClientOperation();
-        } else if (algorithm.equalsIgnoreCase("dilithium2")) {
-            logger.log("AlgorithmName", algorithm);
-            cryptoManager.dilithium2ClientOperation();
-        } else if (algorithm.equalsIgnoreCase("dilithium3")) {
-            logger.log("AlgorithmName", algorithm);
-            cryptoManager.dilithium3ClientOperation();
-        } else if (algorithm.equalsIgnoreCase("dilithium5")) {
-            logger.log("AlgorithmName", algorithm);
-            cryptoManager.dilithium5ClientOperation();
         } else if (algorithm.equalsIgnoreCase("mldsa44")) {
             logger.log("AlgorithmName", algorithm);
             cryptoManager.mldsa44ClientOperation();

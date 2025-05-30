@@ -1,10 +1,5 @@
 package org.example;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.pqc.jcajce.interfaces.DilithiumPrivateKey;
-import org.bouncycastle.pqc.jcajce.interfaces.DilithiumPublicKey;
-import org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +19,6 @@ public class CryptoManager {
     public CryptoManager() {}
 
     public void rsa3072ClientOperation() throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = RSAManager.generateRSA3072KeyPair();
@@ -44,7 +38,6 @@ public class CryptoManager {
     }
 
     public void rsa4096ClientOperation() throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
         long startKeyPair = logger.startTimer();
         KeyPair keyPair = RSAManager.generateRSA4096KeyPair();
@@ -63,87 +56,11 @@ public class CryptoManager {
         FileHandler.saveSignature(signature, SIGNATURE_FILE);
     }
 
-    public void dilithium2ClientOperation() throws Exception {
-        Security.addProvider(new BouncyCastlePQCProvider());
-        BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        long startKeyPair = logger.startTimer();
-        KeyPair keyPair = DilithiumManager.generateDilithium2KeyPair();
-        long timedKeyPair = logger.stopTimer(startKeyPair);
-        DilithiumPrivateKey privateKey = (DilithiumPrivateKey) keyPair.getPrivate();
-        DilithiumPublicKey publicKey = (DilithiumPublicKey) keyPair.getPublic();
-        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
-        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
-        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveDilithiumKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
-        long startSignatureGeneration = logger.startTimer();
-        byte[] signature = DilithiumManager.dilithiumSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
-        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
-        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
-        logger.logSize("SignatureSize(bytes)", signature);
-        FileHandler.saveSignature(signature, SIGNATURE_FILE);
-    }
-
-    public void dilithium3ClientOperation() throws Exception {
-        Security.addProvider(new BouncyCastlePQCProvider());
-        BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        long startKeyPair = logger.startTimer();
-        KeyPair keyPair = DilithiumManager.generateDilithium3KeyPair();
-        long timedKeyPair = logger.stopTimer(startKeyPair);
-        DilithiumPrivateKey privateKey = (DilithiumPrivateKey) keyPair.getPrivate();
-        DilithiumPublicKey publicKey = (DilithiumPublicKey) keyPair.getPublic();
-        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
-        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
-        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveDilithiumKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
-        long startSignatureGeneration = logger.startTimer();
-        byte[] signature = DilithiumManager.dilithiumSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
-        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
-        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
-        logger.logSize("SignatureSize(bytes)", signature);
-        FileHandler.saveSignature(signature, SIGNATURE_FILE);
-    }
-
-    public void dilithium5ClientOperation() throws Exception {
-        Security.addProvider(new BouncyCastlePQCProvider());
-        BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        long startKeyPair = logger.startTimer();
-        KeyPair keyPair = DilithiumManager.generateDilithium5KeyPair();
-        long timedKeyPair = logger.stopTimer(startKeyPair);
-        DilithiumPrivateKey privateKey = (DilithiumPrivateKey) keyPair.getPrivate();
-        DilithiumPublicKey publicKey = (DilithiumPublicKey) keyPair.getPublic();
-        logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
-        logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
-        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveDilithiumKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
-        long startSignatureGeneration = logger.startTimer();
-        byte[] signature = DilithiumManager.dilithiumSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
-        long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
-        logger.log("SignatureGen(ms)", String.valueOf(timedSignatureGeneration));
-        logger.logSize("SignatureSize(bytes)", signature);
-        FileHandler.saveSignature(signature, SIGNATURE_FILE);
-    }
-
     public boolean rsaVerifyOperation() throws Exception {
-        Security.addProvider(new BouncyCastleProvider());
         BenchmarkLogger logger = BenchmarkLogger.getInstance();
         PublicKey publicKey = FileHandler.loadRSAPublicKey(RECEIVED_KEY_FILE);
         long startSignatureVerification = logger.startTimer();
         boolean verifiedSignature = RSAManager.rsaVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
-        long signatureVerification = logger.stopTimer(startSignatureVerification);
-        byte[] signature = FileHandler.loadSignature(RECEIVED_SIGNATURE);
-        logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        logger.logSize("SignatureSize(bytes)", signature);
-        logger.log("SignatureVerify(ms)", String.valueOf(signatureVerification));
-        logger.log("VerificationResult", String.valueOf(verifiedSignature));
-        return verifiedSignature;
-    }
-
-    public boolean dilithiumVerifyOperation() throws Exception {
-        Security.addProvider(new BouncyCastlePQCProvider());
-        BenchmarkLogger logger = BenchmarkLogger.getInstance();
-        PublicKey publicKey = FileHandler.loadDilithiumPublicKey(RECEIVED_KEY_FILE);
-        long startSignatureVerification = logger.startTimer();
-        boolean verifiedSignature = DilithiumManager.dilithiumVerify(Files.readAllBytes(RECEIVED_MESSAGE_FILEPATH), FileHandler.loadSignature(RECEIVED_SIGNATURE), publicKey);
         long signatureVerification = logger.stopTimer(startSignatureVerification);
         byte[] signature = FileHandler.loadSignature(RECEIVED_SIGNATURE);
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
@@ -163,7 +80,7 @@ public class CryptoManager {
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveMLDSAKeys(PUBLIC_KEY_FILE, publicKey);
+        FileHandler.saveMLDSAKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
         byte[] signature = MLDSAManager.mldsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
@@ -182,7 +99,7 @@ public class CryptoManager {
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveMLDSAKeys(PUBLIC_KEY_FILE, publicKey);
+        FileHandler.saveMLDSAKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
         byte[] signature = MLDSAManager.mldsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);
@@ -201,7 +118,7 @@ public class CryptoManager {
         logger.log("KeyPairGen(ms)", String.valueOf(timedKeyPair));
         logger.logSize("PrivKeySize(bytes)", privateKey.getEncoded());
         logger.logSize("PublicKeySize(bytes)", publicKey.getEncoded());
-        FileHandler.saveMLDSAKeys(PUBLIC_KEY_FILE, publicKey);
+        FileHandler.saveMLDSAKeys(privateKey, PRIVATE_KEY_FILE, publicKey, PUBLIC_KEY_FILE);
         long startSignatureGeneration = logger.startTimer();
         byte[] signature = MLDSAManager.mldsaSign(Files.readAllBytes(MESSAGE_FILE_PATH), privateKey);
         long timedSignatureGeneration = logger.stopTimer(startSignatureGeneration);

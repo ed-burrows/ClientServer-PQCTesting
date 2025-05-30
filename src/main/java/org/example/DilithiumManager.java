@@ -6,7 +6,7 @@ import java.security.*;
 
 public class DilithiumManager {
 
-
+    @Deprecated
     public static KeyPair generateDilithium2KeyPair() throws InvalidAlgorithmParameterException,
             NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Dilithium", "BCPQC");
@@ -14,6 +14,7 @@ public class DilithiumManager {
         return keyPairGenerator.generateKeyPair();
     }
 
+    @Deprecated
     public static KeyPair generateDilithium3KeyPair() throws InvalidAlgorithmParameterException,
             NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Dilithium", "BCPQC");
@@ -21,6 +22,7 @@ public class DilithiumManager {
         return keyPairGenerator.generateKeyPair();
     }
 
+    @Deprecated
     public static KeyPair generateDilithium5KeyPair() throws InvalidAlgorithmParameterException,
             NoSuchAlgorithmException, NoSuchProviderException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Dilithium", "BCPQC");
@@ -28,6 +30,7 @@ public class DilithiumManager {
         return keyPairGenerator.generateKeyPair();
     }
 
+    @Deprecated
     public static byte[] dilithiumSign(byte[] data, PrivateKey privateKey) throws NoSuchAlgorithmException,
             NoSuchProviderException, InvalidKeyException, SignatureException {
         Signature signature = Signature.getInstance("Dilithium", "BCPQC");
@@ -36,6 +39,7 @@ public class DilithiumManager {
         return signature.sign();
     }
 
+    @Deprecated
     public static boolean dilithiumVerify(byte[] data, byte[] signature, PublicKey publicKey) throws NoSuchAlgorithmException,
             NoSuchProviderException, InvalidKeyException, SignatureException {
         Signature verifySignature = Signature.getInstance("Dilithium", "BCPQC");
